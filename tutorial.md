@@ -295,7 +295,7 @@ title: Déploiement de l'application
 
 # Déploiement de l'application
 
-Je vvous propose d'utiliser un fichier yaml pour déployer une instance de notre image Docker (hebergé dans mon container registry) dans mon cluster AKS. 
+Je vous propose d'utiliser un fichier yaml pour déployer une instance de notre image Docker (hebergé dans mon container registry) dans mon cluster AKS. 
 Le fichier yaml à utiliser est présent sur le repo, dans le dossier de l'application.
 
 Attention à la ligne 22, le champ containers/image spécifie le chemin vers mon image dans mon ACR.
