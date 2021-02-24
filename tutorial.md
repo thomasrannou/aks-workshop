@@ -28,7 +28,7 @@ title: Objectif du workshop
 
 Ce workshop, accessible à **tous les développeurs même sans connaissance de Kubernetes ou sur Azure -**, vous permettra de découvrir le déploiement de cluster [Kubernetes dans Azure] ainsi que le déploiement d'application conteneurisée dans cet environnement.
 
-![Logo du projet Kubernetes](media/kubernetes-logo.jpg)
+![Logo du projet Kubernetes](media/kubernetes-logo.png)
 
 --sep--
 ---
@@ -97,7 +97,7 @@ Kubernetes peut fonctionner avec n’importe quel système de container conforme
 
 ## Architecture de Kubernetes
 
-![Architecture de Kubernetes](media/Kubernetes-architecture.jpg)
+![Architecture de Kubernetes](media/Kubernetes-architecture.png)
 
 Master : Le Kubernetes master est responsable du maintien de l’état souhaité pour votre cluster. Il gère la disponibilité des nodes.
 
@@ -141,17 +141,17 @@ Dans votre fenêtre powershell, positionnez vous à la racine de votre repertoir
 
 _docker build -f "ApplicationDemoWorkshop/Dockerfile" . -t aksworkshop_
 
-![Génération de l'image Docker](media/1-build.jpg)
+![Génération de l'image Docker](media/1-build.png)
 
 On peux maintenant  la création d'un conteneur basé sur cette image :
 
 _docker run -d -p 8080:80 --name conteneurdemo aksworkshop_
 
-![Execution d'un conteneur](media/2-execution.jpg)
+![Execution d'un conteneur](media/2-execution.png)
 
 Et accéder à : http://localhost:8080/ pour valider le bon fonctionnement de notre site :
 
-![Validation du site web](media/3-website.jpg)
+![Validation du site web](media/3-website.png)
 
 ## Créer un resource group
 
@@ -162,7 +162,7 @@ Chaque service Azure doit absolument être déployé dans un resource group. Ici
 
 _az group create --name rg-workshop --location francecentral_
 
-![Creation du ressource group](media/4-ressourcegroup.jpg)
+![Creation du ressource group](media/4-ressourcegroup.png)
 
 ## Déploiement du projet dans un Azure Container Registry
 
@@ -172,7 +172,7 @@ Vous pouvez demander la création de votre Container Registry grâce à cette co
 
 _az acr create --resource-group rg-workshop --name acr-workshopdevcongalaxy --sku Basic_
 
-![Creation du container registry](media/5-registrycreate.jpg)
+![Creation du container registry](media/5-registrycreate.png)
 
 Connectez vous maintenant à cette registry :
 
@@ -180,7 +180,7 @@ _az acr login --name acrworkshopdevcongalaxy_
 
 L'authentification se fait ici de façon implicite étant donnée que vous êtes connecté à votre souscription Azure.
 
-![Connexion au container registry](media/6-registryconnect.jpg)
+![Connexion au container registry](media/6-registryconnect.png)
 
 Nous pouvons maintenant y publier notre image Docker.
 Pour cela, vous devrez tout d'abord taggué votre image locale avec le nom de votre registry Azure :
@@ -193,17 +193,17 @@ _docker push acrworkshopdevcongalaxy.azurecr.io/appworkshop:v1_
 
 Ce qui aura pour effet de démarer l'upload vers votre registry :
 
-![Push de l'image](media/7-registrypush.jpg)
+![Push de l'image](media/7-registrypush.png)
 
-![Fin du push de l'image](media/7-registrypush-end.jpg)
+![Fin du push de l'image](media/7-registrypush-end.png)
 
 Ces opérations réalisées, si on se rend sur portal.azure.com, on doit trouver un ressourcegroup rg-workshop contenant un Azure Container Registry :
 
-![Vérification sur le portail](media/8-portail-rg.jpg)
+![Vérification sur le portail](media/8-portail-rg.png)
 
 Hébergeant lui même une image Docker nommée appworkshop :
 
-![Vérification sur le portail](media/9-portail-registry.jpg)
+![Vérification sur le portail](media/9-portail-registry.png)
 
 ## Gestion des droits
 
@@ -216,11 +216,11 @@ J’utilise la commande :
 
 _az ad sp create-for-rbac --skip-assignment --name sp-acr_
 
-![Création du service principal](media/10-serviceprincipal.jpg)
+![Création du service principal](media/10-serviceprincipal.png)
 
 Et pour leur utilisation ultérieure je les affecte manuellement à deux variables :
 
-![Création du service principal](media/11-setserviceprincipal.jpg)
+![Création du service principal](media/11-setserviceprincipal.png)
 
 J’ai maintenant besoin d’identifier ma registry :
 
@@ -232,7 +232,7 @@ _az role assignment create --assignee $spid --scope $registryId --role acrpull_
 
 J’obtiens alors un JSON descriptif de l’autorisation accordée :
 
-![Affectation du rôle](media/12-roleassignacrpull.jpg)
+![Affectation du rôle](media/12-roleassignacrpull.png)
 
 NB : je vous propose dans ce workshop cette façon de faire pour montrer que l'intégration entre ces deux composants est soumise à des droits. Un service Azure n'est pas libre d'utiliser comme bon lui semble un autre composant ! La gestion de ce service principal et l'autorisation acr-pull peux se faire de façon implicite à la création du cluster AKS gràce au paramètre --attach-acr $registryId.
 
@@ -242,7 +242,7 @@ Je créé maintenant mon Azure Kubernetes Service, en précisant l’id et le pa
 
 _az aks create --resource-group rg-workshop --name aks-workshopdevcongalaxy --location francecentral --node-count 2 --service-principal $spid --client-secret $sppwd --enable-addons monitoring --generate-ssh-keys --vm-set-type VirtualMachineScaleSets --load-balancer-sku standard --zones 1 2 3_
 
-![Déploiement du cluster AKS](media/13-deployaks.jpg)
+![Déploiement du cluster AKS](media/13-deployaks.png)
 
 Avant de continuer, je vais expliquer le dernier paramètre : *--zones* !
 
@@ -255,25 +255,25 @@ Si vous avez bien suivis, vous comprenez maintenant que les clusters AKS déploy
 Grace à cela votre cluster AKS est capable de tolérer une défaillance dans l’une de ces zones ; si un des datacenter de la région est indisponible la continuité de service est assuré. A contrario, si tout les nœuds de notre cluster était déployé au même endroit, le service serait indisponible.
 Cette notion de zone de disponibilité est fondamentale lorsqu'on s'intéresse à des notions de haute disponibilité et de continuité de service.
 
-![Déploiement du cluster AKS](media/14-deployaksend.jpg)
+![Déploiement du cluster AKS](media/14-deployaksend.png)
 
 Nous avons donc provisionner un cluster Azure Kubernetes Service ! Voyons maintenant comment l'administrer en local.
 Pour gérer un cluster Kubernetes, on utilise *kubectl*, le client de ligne de commande Kubernetes . Pour installer kubectl, si il n'est pas déja présent, utilisez :
 
 _az aks install-cli_
 
-![Installation de kubectl](media/15-install-kubectl.jpg)
+![Installation de kubectl](media/15-install-kubectl.png)
 
 L'installeur vous demande de jouer cette commande Powershell : $env:path += 'C:\Users\trannou\.azure-kubelogin' pour poursuivre dans cette fenêtre Powershell.
 Pour une solution pérenne , ajoutez cette même entrée aux gestionnaires de variables d'environnement Windows :
 
-![Installation de kubectl](media/16-environnementvar.jpg)
+![Installation de kubectl](media/16-environnementvar.png)
 
 Maintenant pour pouvoir utiliser votre cluster en local, il faut executer :
 
 _az aks get-credentials --resource-group rg-workshop --name aks-workshopdevcongalaxy
 
-![Installation de kubectl](media/17-credentialsaks.jpg)
+![Installation de kubectl](media/17-credentialsaks.png)
 
 Cette commande permet de renseigner le kubeconfig local contenant les informations nécessaires pour accéder au cluster distant :
 - L’utilisateur et ses certificats/clés
@@ -310,16 +310,16 @@ _kubectl apply -f .\deploytoaks.yaml_
 
 En résultat vous devez obtenir ceci :
 
-![Installation de kubectl](media/18-apply.jpg)
+![Installation de kubectl](media/18-apply.png)
 
 Vérifions que ce nous avons déployé !
 
-![Installation de kubectl](media/19-check.jpg)
+![Installation de kubectl](media/19-check.png)
 
 Je trouve normalement sur mon cluster un deployment qui execute un pod ainsi qu'un service pour exposé mon application.
 Vous voyez également une ip externe à été affectée à mon service. Si vous la renseignez dans votre navigateur vous devriez retombé sur une interface connue.
 
-![Installation de kubectl](media/20-checkservice.jpg)
+![Installation de kubectl](media/20-checkservice.png)
 
 Maintenant que notre application est déployée, telle que je l'ai demandée, on peux commencer à appréhender la puissance de Kubernetes. Si je demande la suppression de mon pod :
 
@@ -327,7 +327,7 @@ _kubectl delete pod idpod_
 
 Grace au replicaset, un nouveau pod est automatiquement créé pour le remplacer.
 
-![Installation de kubectl](media/21-checkdeployment.jpg)
+![Installation de kubectl](media/21-checkdeployment.png)
 
 --sep--
 ---
@@ -342,7 +342,7 @@ Le scaling consiste à augmenter ou diminuer le nombre d’instances d’une app
 
 Si on reprend le yaml utilisé précédemment, une section va nous intéresser particulièrement pour l'autoscaling :
 
-![Installation de kubectl](media/23-ressource.jpg)
+![Installation de kubectl](media/23-ressource.png)
 
 Il sagit de "ressources" avec la définition des propriétés requests et limits.
 
@@ -362,7 +362,7 @@ _kubectl autoscale deployment deployment-appworkshop --max 100 --min 5 --cpu-per
 
 _kubectl describe pod | select-string -pattern '^Name:','^Node:'_
 
-![Installation de kubectl](media/22-deployhpa.jpg)
+![Installation de kubectl](media/22-deployhpa.png)
 
 Ici nous constatons que nos 5 pods sont déployés sur les deux nodes à notre disposition.
 
@@ -387,13 +387,13 @@ Concretement, pour le mettre en place un simple *aks update* fait l'affaire :
 
 _az aks update --resource-group rg-workshop --name aks-workshopdevcongalaxy --enable-cluster-autoscaler --min-count 2 --max-count 5_
 
-![Installation de kubectl](media/24-deployautoscalecluster.jpg)
+![Installation de kubectl](media/24-deployautoscalecluster.png)
 
 On a maintenant un cluster avec un node pool scalable entre 2 et 5.
 
 _kubectl describe nodes | select-string -pattern '^Name:','zone='_
 
-![Installation de kubectl](media/25-aks-nodes.jpg)
+![Installation de kubectl](media/25-aks-nodes.png)
 
 Si on s'attarde sur le résultat de cette commande, on constate bien l'utilisation des zones de disponibilités. La 1ere VM est sur francecentral-1 et la seconde sur francecentral-2.
 
@@ -405,48 +405,48 @@ L'autoscaler de cluster devrait également se dclencher pour provisionner des no
 
 Pour ce faire je vais utiliser un outil du nom de [Vegeta](https://github.com/tsenart/vegeta/releases) !
 
-![Scaling des pods](media/gif-vegeta.jpg)
+![Scaling des pods](media/gif-vegeta.png)
 
 La version Windows est en général un peu en retard sur les mises à jour. Il faut donc si besoin revenir à la version précédente pour trouver l'asset Windows.
 Dezippez le dossier dans le repertoire de votre choix.
 
 Pour héberger cet outil, je vais déployer une VM dans Azure. 
 
-![Création de la VM dans Azure](media/26-vm.jpg)
+![Création de la VM dans Azure](media/26-vm.png)
 
 Je la positionne dans mon ressource group de travail, je configure un User/Password pour m'y connecter tout à l'heure.
 Important : conservez le port RDP (3389) ouvert tel que configuré par défaut.
 Une fois la 1ere page complétée, vous pouvez directement cliquer sur "Vérifier et créer" :
 
-![Paramétrage de la VM](media/26-vm2.jpg)
+![Paramétrage de la VM](media/26-vm2.png)
 
 Le déploiement est en cours :
-![Déploiement de la VM](media/26-vm3.jpg)
+![Déploiement de la VM](media/26-vm3.png)
 
 Une fois terminé, cliquez sur "Acceder à la ressource" :
 
-![Déploiement terminé](media/26-vm4.jpg)
+![Déploiement terminé](media/26-vm4.png)
 
 Puis télécharger le fichier RDP via le bouton "Connecter" :
 
-![Téléchargement du fichier RDP](media/26-vm5.jpg)
+![Téléchargement du fichier RDP](media/26-vm5.png)
 
-![Téléchargement du fichier RDP](media/26-vm6.jpg)
+![Téléchargement du fichier RDP](media/26-vm6.png)
 
 Pour déclencher le test, utilisez cette commande. Il faut renseigner la bonne url, la durée, et le nombre d'appels par seconde (ici 5000)
 
 _echo GET http://20.74.40.2 | vegeta.exe attack -duration=5m -rate=5000 -output=stress-results.bin_
 
 Je lance mon test de charge : 
-![Lancement de Vegeta](media/27-vegeta.jpg)
+![Lancement de Vegeta](media/27-vegeta.png)
 
 Au bout de quelques minutes je vois déja le scaling en oeuvre avec la création d'un node :
 
-![Scaling des nodes](media/28-scalenodes.jpg)
+![Scaling des nodes](media/28-scalenodes.png)
 
 Et la multiplicaiton du nombres de pods :
 
-![Scaling des pods](media/29-scalepods.jpg)
+![Scaling des pods](media/29-scalepods.png)
 
 Pour visualiser le résultat de Vegeta, cette commande peux vous créer un graphique sur la latence (et les potentielles erreurs http) induite par votre test de charge :
 
@@ -456,7 +456,7 @@ Ouvrez le fichier html pour constatez la latence induite par la charge sur votre
 
 Quand je stoppe le load, je vais constater l’inverse et voir progressivement mon nombre de pods diminuer, jusqu’à revenir à ma situation initiale la aussi au bout de seulement quelques minutes :
 
-![Etat initial](media/30-etatinitial.jpg)
+![Etat initial](media/30-etatinitial.png)
 
 On se rend ici compte de toute la puissance de Kubernetes dans cette getion de la scalabilité applicative.
 Ce genre de solutions est donc parfaitement adapté au service avec un traffic réseau variable tel que :
