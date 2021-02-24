@@ -391,7 +391,7 @@ Concretement, pour le mettre en place un simple *aks update* fait l'affaire :
 
 _az aks update --resource-group rg-workshop --name aks-workshopdevcongalaxy --enable-cluster-autoscaler --min-count 2 --max-count 5_
 
-![Installation de kubectl](media/24-deployautoscalecluster.PNG)
+![Description des nodes](media/24-deployautoscalecluster.PNG)
 
 On a maintenant un cluster avec un nodepool scalable entre 2 et 5 :
 
