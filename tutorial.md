@@ -397,7 +397,7 @@ On a maintenant un cluster avec un nodepool scalable entre 2 et 5 :
 
 _kubectl describe nodes | select-string -pattern '^Name:','zone='_
 
-![Installation de kubectl](media/25-aks-nodes.PNG)
+![Installation de kubectl](media/25-aksnodes.PNG)
 
 Si on s'attarde sur le résultat de cette commande, on constate bien l'utilisation des zones de disponibilités. La 1ere VM est sur francecentral-1 et la seconde sur francecentral-2.
 
