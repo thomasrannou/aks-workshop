@@ -273,13 +273,13 @@ _az aks install-cli_
 
 L'installeur vous demande de jouer cette commande Powershell : $env:path += 'C:\Users\trannou\.azure-kubelogin' pour poursuivre. Cette modification ne sera valable que pour la fenêtre Powershell courante. Pour une solution pérenne , ajoutez cette même entrée aux gestionnaires de variables d'environnement Windows :
 
-![Installation de kubectl](media/16-environnementvar.PNG)
+![Gestion des variables d'environnement](media/16-environnementvar.PNG)
 
 Maintenant pour pouvoir utiliser votre cluster en local, il faut executer :
 
 _az aks get-credentials --resource-group rg-workshop --name aks-workshopdevcongalaxy_
 
-![Installation de kubectl](media/17-credentialsaks.PNG)
+![Connexion au cluster AKS](media/17-credentialsaks.PNG)
 
 Cette commande permet de renseigner le kubeconfig local contenant les informations nécessaires pour accéder au cluster distant :
 - L’utilisateur et ses certificats/clés
@@ -316,16 +316,16 @@ _kubectl apply -f .\deploytoaks.yaml_
 
 En résultat vous devez obtenir ceci :
 
-![Installation de kubectl](media/18-apply.PNG)
+![Yaml Apply](media/18-apply.PNG)
 
 Vérifions que ce nous avons déployé !
 
-![Installation de kubectl](media/19-check.PNG)
+![Vérification du déploiement](media/19-check.PNG)
 
 Je trouve normalement sur mon cluster un deployment qui execute un pod ainsi qu'un service pour exposer mon application.
 Vous voyez également une ip externe à été affectée à mon service. Si vous la renseignez dans votre navigateur vous devriez retomber sur une interface connue.
 
-![Installation de kubectl](media/20-checkservice.PNG)
+![Vérification du service](media/20-checkservice.PNG)
 
 Maintenant que notre application est déployée, telle que je l'ai demandé, on peux commencer à appréhender la puissance de Kubernetes. Si je demande la suppression de mon pod :
 
@@ -333,7 +333,7 @@ _kubectl delete pod idpod_
 
 Grace au replicaset, un nouveau pod est automatiquement créé pour le remplacer.
 
-![Installation de kubectl](media/21-checkdeployment.PNG)
+![Création automatique d'un nouveau pod](media/21-checkdeployment.PNG)
 
 --sep--
 ---
@@ -348,7 +348,7 @@ Le scaling consiste à augmenter ou diminuer le nombre d’instances d’une app
 
 Si on reprend le yaml utilisé précédemment, une section va nous intéresser particulièrement pour l'autoscaling :
 
-![Installation de kubectl](media/23-ressource.PNG)
+![Ressource d'un pod](media/23-ressource.PNG)
 
 Il sagit de **ressources** avec la définition des propriétés requests et limits.
 
@@ -368,7 +368,7 @@ _kubectl autoscale deployment deployment-appworkshop --max 100 --min 5 --cpu-per
 Si je vérifie grace à cette commande : 
 _kubectl describe pod | select-string -pattern '^Name:','^Node:'_
 
-![Installation de kubectl](media/22-deployhpa.PNG)
+![Déploiement d'un HPA](media/22-deployhpa.PNG)
 
 Je constate qu’après la mise en place de mon HPA, j’ai désormais 5 pods d’opérationnel déployés sur les deux nodes à notre disposition. Les appels vers mon site web seront automatiquement répartis vers ces deux pods via le loadbalancer de mon service.
 
