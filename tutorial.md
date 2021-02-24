@@ -10,7 +10,7 @@ title: Introduction
 # Introduction
 
 Ce repository contient le code ainsi que les instructions vous permettant de 
-réaliser le workshop _déployer votre premier cluster kubernetes dans Azure_.
+réaliser le workshop **déployer votre premier cluster kubernetes dans Azure**.
 
 ## Pré-requis
 
@@ -26,7 +26,7 @@ title: Objectif du workshop
 
 # Objectif du workshop
 
-Ce workshop, accessible à **tous les développeurs même sans connaissance de Kubernetes ou sur Azure -**, vous permettra de découvrir le déploiement de cluster [Kubernetes dans Azure] ainsi que le déploiement d'application conteneurisée dans cet environnement.
+Ce workshop, accessible à **tous les développeurs même sans connaissance de Kubernetes ou d'Azure **, vous permettra de découvrir le déploiement de cluster Kubernetes dans Azure ainsi que le déploiement d'application conteneurisée dans cet environnement.
 
 ![Logo du projet Kubernetes](media/kubernetes-logo.png)
 
@@ -83,10 +83,10 @@ visite et de vous familiariser avec l'interface du portail Azure.
 
 --sep--
 ---
-title: Azure Kubernetes Services : le service managé k8s dans Azure
+title: AKS : le service managé k8s dans Azure
 ---
 
-# AKS : le service managé K8S dans Azure
+# AKS : Le service managé K8S dans Azure
 
 Avant de présenter Azure Kubernetes Service en tant que produit Azure, il faut s’intéresser à l’outil Kubernetes lui même.
 
@@ -99,7 +99,7 @@ Kubernetes peut fonctionner avec n’importe quel système de container conforme
 
 ![Architecture de Kubernetes](media/Kubernetes-architecture.png)
 
-Master : Le Kubernetes master est responsable du maintien de l’état souhaité pour votre cluster. Il gère la disponibilité des nodes.
+**Master** : Le Kubernetes master est responsable du maintien de l’état souhaité pour votre cluster. Il gère la disponibilité des nodes.
 
 **etcd** : les données de configuration du cluster. Il représente l’état du cluster à n’importe quel instant.
 
@@ -131,19 +131,17 @@ Le but de ce tutoriel est de déployer un projet ASP .Net 5 conteneurisé dans u
 ## Génération d'une image Docker de notre projet
 
 Pour les utilisateurs sous Windows, configurer votre Docker en mode "Linux containers".
-Sous Windows toujours Docker pourra etre configuré pour utiliser WSL2 ou la virtualisation HyperV. Les deux fonctionneront.
+Sous Windows toujours, Docker pourra etre paramétré pour utiliser WSL2 ou la virtualisation HyperV. Les deux fonctionneront.
 
-Le projet en lui même est à télécharger ici. Il contient le code source ainsi que le Dockerfile qui nous permettra tout à l'heure de générer une image Docker.
-On commence par ouvrir une fenêtre Powershell  et se positionner dans le répertoire racine du projet.
+Le projet en lui même est à télécharger [ici](https://github.com/thomasrannou/aks-workshop/tree/main/ApplicationDemoWorkshop).
 
-Dans un premier temps, vous allez devoir générer notre image Docker et donc compiler le projet que vous avez récupéré.
-Dans votre fenêtre powershell, positionnez vous à la racine de votre repertoire projet et executez :
+On va donc commencer par récupérer le projet puis ouvrir une fenêtre Powershell. Dans un premier temps, vous allez devoir générer une image Docker et donc compiler le projet que vous avez récupéré. Dans votre fenêtre powershell, positionnez vous à la racine de votre repertoire projet et executez :
 
 _docker build -f "ApplicationDemoWorkshop/Dockerfile" . -t aksworkshop_
 
 ![Génération de l'image Docker](media/1-build.PNG)
 
-On peux maintenant  la création d'un conteneur basé sur cette image :
+On peux maintenant demander la création d'un conteneur basé sur cette image :
 
 _docker run -d -p 8080:80 --name conteneurdemo aksworkshop_
 
@@ -190,7 +188,7 @@ L'authentification se fait ici de façon implicite étant donnée que vous êtes
 ![Connexion au container registry](media/6-registryconnect.PNG)
 
 Nous pouvons maintenant y publier notre image Docker.
-Pour cela, vous devrez tout d'abord taggué votre image locale avec le nom de votre registry Azure :
+Pour cela, vous devrez tout d'abord tagguer votre image locale avec le nom de votre registry Azure :
 
 _docker tag aksworkshop acrworkshopdevcongalaxy.azurecr.io/appworkshop:v1_
 
@@ -217,7 +215,7 @@ Hébergeant lui même une image Docker nommée appworkshop :
 Avant de provisionner notre cluster AKS, nous avons un aspect sécurité à gérer pour permettre la communication entre notre registry et notre futur cluster.
 Ce besoin passe par ce qu'on appelle un service principal.
 
-Je créé tout d’abord un service principal pour mon cluster Kubernetes : Pour permettre à un cluster AKS d’interagir avec d’autres ressources Azure, un service principal Azure Active Directory est utilisé.  Ici on veux faire en sorte que mon cluster AKS est accès à ma container registry.
+Je créé tout d’abord un service principal pour mon cluster Kubernetes : Pour permettre à un cluster AKS d’interagir avec d’autres ressources Azure, un service principal Azure Active Directory est utilisé.  Ici on veux faire en sorte que mon cluster AKS est accès à mon container registry.
 
 J’utilise la commande :
 
@@ -233,7 +231,7 @@ J’ai maintenant besoin d’identifier ma registry :
 
 _$registryId=$(az acr show --resource-group rg-workshop --name acrworkshopdevcongalaxy --query "id" --output tsv)_
 
-Je vais maintenant donner à mon service principal le droit d’utiliser ma registry grâce à cette commande :
+Je vais maintenant donner à mon service principal le droit d’utiliser ma registry (uniquement pour récupérer une image : acrpull) grâce à cette commande :
 
 _az role assignment create --assignee $spid --scope $registryId --role acrpull_
 
@@ -241,7 +239,9 @@ J’obtiens alors un JSON descriptif de l’autorisation accordée :
 
 ![Affectation du rôle](media/12-roleassignacrpull.PNG)
 
-NB : je vous propose dans ce workshop cette façon de faire pour montrer que l'intégration entre ces deux composants est soumise à des droits. Un service Azure n'est pas libre d'utiliser comme bon lui semble un autre composant ! La gestion de ce service principal et l'autorisation acr-pull peux se faire de façon implicite à la création du cluster AKS gràce au paramètre --attach-acr $registryId.
+NB : je vous propose dans ce workshop cette façon de faire pour montrer que l'intégration entre ces deux composants est soumise à des droits. Un service Azure n'est pas libre d'utiliser comme bon lui semble un autre service ! 
+
+A noter tout de même que la gestion de ce service principal et l'autorisation acr-pull peux se faire de façon implicite à la création du cluster AKS gràce au paramètre --attach-acr $registryId.
 
 ## Création du cluster Azure Kubernetes Services
 
@@ -262,23 +262,22 @@ Si vous avez bien suivis, vous comprenez maintenant que les clusters AKS déploy
 Grace à cela votre cluster AKS est capable de tolérer une défaillance dans l’une de ces zones ; si un des datacenter de la région est indisponible la continuité de service est assuré. A contrario, si tout les nœuds de notre cluster était déployé au même endroit, le service serait indisponible.
 Cette notion de zone de disponibilité est fondamentale lorsqu'on s'intéresse à des notions de haute disponibilité et de continuité de service.
 
-![Déploiement du cluster AKS](media/14-deployaksend.PNG)
+![Déploiement du cluster AKS](media/14-deployaksned.PNG)
 
 Nous avons donc provisionner un cluster Azure Kubernetes Service ! Voyons maintenant comment l'administrer en local.
 Pour gérer un cluster Kubernetes, on utilise *kubectl*, le client de ligne de commande Kubernetes . Pour installer kubectl, si il n'est pas déja présent, utilisez :
 
 _az aks install-cli_
 
-![Installation de kubectl](media/15-install-kubectl.PNG)
+![Installation de kubectl](media/15-installkubectl.PNG)
 
-L'installeur vous demande de jouer cette commande Powershell : $env:path += 'C:\Users\trannou\.azure-kubelogin' pour poursuivre dans cette fenêtre Powershell.
-Pour une solution pérenne , ajoutez cette même entrée aux gestionnaires de variables d'environnement Windows :
+L'installeur vous demande de jouer cette commande Powershell : $env:path += 'C:\Users\trannou\.azure-kubelogin' pour poursuivre. Cette modification ne sera valable que pour la fenêtre Powershell courante. Pour une solution pérenne , ajoutez cette même entrée aux gestionnaires de variables d'environnement Windows :
 
 ![Installation de kubectl](media/16-environnementvar.PNG)
 
 Maintenant pour pouvoir utiliser votre cluster en local, il faut executer :
 
-_az aks get-credentials --resource-group rg-workshop --name aks-workshopdevcongalaxy
+_az aks get-credentials --resource-group rg-workshop --name aks-workshopdevcongalaxy_
 
 ![Installation de kubectl](media/17-credentialsaks.PNG)
 
@@ -296,10 +295,10 @@ title: Déploiement de l'application
 
 # Déploiement de l'application
 
-Maintenant je vais utiliser un fichier yaml pour déployer une instance de mon image Docker (hebergé dans mon container registry) dans mon cluster AKS. 
-Le fichier yaml à utiliser est présent sur le repo, dans le dossier deploy.
+Je vvous propose d'utiliser un fichier yaml pour déployer une instance de notre image Docker (hebergé dans mon container registry) dans mon cluster AKS. 
+Le fichier yaml à utiliser est présent sur le repo, dans le dossier de l'application.
 
-Attention à la ligne 22, le champ containers/image spécifie le chemin vers mon image dans mon container registry azure.
+Attention à la ligne 22, le champ containers/image spécifie le chemin vers mon image dans mon ACR.
 Si vous avez choisis un nom différent du mien, il faudra modifier le fichier.
 
 ## Déploiement via un fichier Yaml
@@ -323,12 +322,12 @@ Vérifions que ce nous avons déployé !
 
 ![Installation de kubectl](media/19-check.PNG)
 
-Je trouve normalement sur mon cluster un deployment qui execute un pod ainsi qu'un service pour exposé mon application.
-Vous voyez également une ip externe à été affectée à mon service. Si vous la renseignez dans votre navigateur vous devriez retombé sur une interface connue.
+Je trouve normalement sur mon cluster un deployment qui execute un pod ainsi qu'un service pour exposer mon application.
+Vous voyez également une ip externe à été affectée à mon service. Si vous la renseignez dans votre navigateur vous devriez retomber sur une interface connue.
 
 ![Installation de kubectl](media/20-checkservice.PNG)
 
-Maintenant que notre application est déployée, telle que je l'ai demandée, on peux commencer à appréhender la puissance de Kubernetes. Si je demande la suppression de mon pod :
+Maintenant que notre application est déployée, telle que je l'ai demandé, on peux commencer à appréhender la puissance de Kubernetes. Si je demande la suppression de mon pod :
 
 _kubectl delete pod idpod_
 
@@ -345,45 +344,43 @@ title: Autoscaling
 
 ## Autoscaling de pods
 
-Le scaling consiste à augmenter ou diminuer le nombre d’instances d’une application. Cela permet par exemple de résister à un pic de charge si votre service est fortement sollicité par moments et très peu le reste du temps. On peut configurer grâce à Kubernetes l’upscale et le downscale pour s’adapter en temps réel aux besoins de nos utilisateurs.
+Le scaling consiste à augmenter ou diminuer le nombre d’instances d’une application. Cela permet par exemple de résister à un pic de charge si votre service est fortement sollicité par moment et très peu le reste du temps. On peut configurer grâce à Kubernetes l’upscale et le downscale pour s’adapter en temps réel aux besoins de nos utilisateurs.
 
 Si on reprend le yaml utilisé précédemment, une section va nous intéresser particulièrement pour l'autoscaling :
 
 ![Installation de kubectl](media/23-ressource.PNG)
 
-Il sagit de "ressources" avec la définition des propriétés requests et limits.
+Il sagit de **ressources** avec la définition des propriétés requests et limits.
 
-- Requests, c’est ce que le pod est garanti d’avoir à sa disposition pour fonctionner. Ici mon container aura donc 250m de CPU (1/4 de VCPU)
-- Limits en revanche c’est une sécurité sur la consommation de ressources du container. Il ne pourra pas utiliser plus de 500m de CPU (1/2 VCPU). Si il va au-delà, le pod sera détruit.
+- **Requests**, c’est ce que le pod est garanti d’avoir à sa disposition pour fonctionner. Ici mon container aura donc 250m de CPU (1/4 de VCPU)
+- **Limits** en revanche c’est une sécurité sur la consommation de ressources du container. Il ne pourra pas utiliser plus de 500m de CPU (1/2 VCPU). Si il va au-delà, le pod sera détruit.
 
 Les valeurs de CPU sont définis en milli-cores. Si vous avez besoin de deux VCPU il faudra indiquer 2000m. La notation "2" sera équivalente.
-Pour la mémoire, les valeurs sont exprimées en bytes.
 
-La commande kubectl autoscale que nous utiliserons ensuite crée un objet HorizontalPodAutoscaler (HPA) qui cible une ressource spécifiée et la fait évoluer si nécessaire. Le HPA ajuste périodiquement le nombre d’instances dupliquées de façon à respecter la valeur d’utilisation moyenne du processeur que vous spécifiez.
+La commande kubectl autoscale que nous utiliserons ensuite crée un objet **HorizontalPodAutoscaler** (HPA) qui cible une ressource spécifiée et la fait évoluer si nécessaire. Le HPA ajuste périodiquement le nombre d’instances dupliquées de façon à respecter la valeur d’utilisation moyenne du processeur que vous spécifiez.
 
-Ici, je vais demander un HPA sur mon application appworkshop. Je lui indique de scaler entre 3 et 10 réplicas. L’upscale se fera si le pourcentage CPU consommé dépasse les 70% de ce qui est alloué, ici c’est donc 70% de 500millicores de CPU.
+Ici, je vais demander un HPA sur mon application appworkshop. Je lui indique de scaler entre 5 et 100 réplicas. L’upscale se fera si le pourcentage CPU consommé dépasse les 70% de ce qui est alloué, ici c’est donc 70% de 500millicores de CPU.
 
 Pour demander la création d'un HPA sur mon deployment executez :
 
 _kubectl autoscale deployment deployment-appworkshop --max 100 --min 5 --cpu-percent 70_
 
+Si je vérifie grace à cette commande : 
 _kubectl describe pod | select-string -pattern '^Name:','^Node:'_
 
 ![Installation de kubectl](media/22-deployhpa.PNG)
 
-Ici nous constatons que nos 5 pods sont déployés sur les deux nodes à notre disposition.
+Je constate qu’après la mise en place de mon HPA, j’ai désormais 5 pods d’opérationnel déployés sur les deux nodes à notre disposition. Les appels vers mon site web seront automatiquement répartis vers ces deux pods via le loadbalancer de mon service.
 
 Précision : La commande kubectl get hpa me permet d’afficher mes differents scaling mis en place sur mon cluster k8s.
 
 _kubectl get hpa_
 
-Je constate qu’après la mise en place de mon HPA, j’ai désormais 5 pods d’opérationnel ! Les appels vers mon site web seront automatiquement répartis vers ces deux pods via le loadbalancer de mon service.
-
 NB : cette configuration de l'autoscale de mon deployment peux également être géré par un fichier [yaml](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/).
 
 ## Autoscaling de nodes
 
-AKS nous offre la possibilité d’allouer et de désallouer automatiquement des nodes Kubernetes pour l’hébergement de nos applications en fonction de critères que nous détaillerons ci-dessous, c’est grâce à l’autoscaler de cluster. Cet autoscale utilise les VMSS, cette fonctionnalité Azure nous permet de gérer des collections de machines virtuelles (identiques), capable de s’instancier à la demande.
+AKS nous offre la possibilité d’allouer et de désallouer automatiquement des nodes Kubernetes pour l’hébergement de nos applications en fonction de critères que nous détaillerons ci-dessous, c’est grâce à **l’autoscaler de cluster**. Cet autoscale utilise les VMSS, cette fonctionnalité Azure nous permet de gérer des collections de machines virtuelles (identiques), capable de s’instancier à la demande.
  
 L’autoscaler augmente ou diminue donc automatiquement la taille du [pool de nœuds](https://thomasrannou.azurewebsites.net/2020/01/28/les-pools-de-noeuds-dans-aks), en analysant la demande de ressources des pods.
 
@@ -396,7 +393,7 @@ _az aks update --resource-group rg-workshop --name aks-workshopdevcongalaxy --en
 
 ![Installation de kubectl](media/24-deployautoscalecluster.PNG)
 
-On a maintenant un cluster avec un node pool scalable entre 2 et 5.
+On a maintenant un cluster avec un nodepool scalable entre 2 et 5 :
 
 _kubectl describe nodes | select-string -pattern '^Name:','zone='_
 
@@ -406,13 +403,13 @@ Si on s'attarde sur le résultat de cette commande, on constate bien l'utilisati
 
 ## Stress Test
 
-Maintenant, je vais stresser un peu mon application et simuler un fort trafic sur mon site. 
-En toute logique, l’autoscaling configuré pour mon cluster AKS doit intervenir et mon nombre de pods devraient se dupliquer. 
-L'autoscaler de cluster devrait également se dclencher pour provisionner des nodes pour héberger tout les pods :) 
+Maintenant, nous allons stresser un peu l'application et simuler un fort trafic sur mon site. 
+En toute logique, l’autoscaling configuré pour mon cluster AKS doit intervenir et le nombre de pods devraient se dupliquer. 
+L'autoscaler de cluster devrait également se déclencher pour provisionner des nodes pour héberger tout les pods.
 
 Pour ce faire je vais utiliser un outil du nom de [Vegeta](https://github.com/tsenart/vegeta/releases) !
 
-![Scaling des pods](media/gif-vegeta.PNG)
+![Scaling des pods](media/gif-vegeta.gif)
 
 La version Windows est en général un peu en retard sur les mises à jour. Il faut donc si besoin revenir à la version précédente pour trouver l'asset Windows.
 Dezippez le dossier dans le repertoire de votre choix.
@@ -461,12 +458,12 @@ _vegeta.exe plot -title=Results stress-results.bin > stress-results-plot.html_
 
 Ouvrez le fichier html pour constatez la latence induite par la charge sur votre application.
 
-Quand je stoppe le load, je vais constater l’inverse et voir progressivement mon nombre de pods diminuer, jusqu’à revenir à ma situation initiale la aussi au bout de seulement quelques minutes :
+Quand je stoppe le load, je vais constater l’inverse et voir progressivement mon nombre de pods diminuer, jusqu’à revenir à ma situation initiale, au bout de seulement quelques minutes :
 
 ![Etat initial](media/30-etatinitial.PNG)
 
 On se rend ici compte de toute la puissance de Kubernetes dans cette getion de la scalabilité applicative.
-Ce genre de solutions est donc parfaitement adapté au service avec un traffic réseau variable tel que :
+Ce genre de solutions est donc parfaitement adapté au service avec un trafic réseau variable tel que :
 - Un site e-commerce particulierement fréquenté en période de solde ou de fêtes de fin d'année.
 - Une application de saisie des temps de travail très sollicité à la fin de la semaine ou du mois et quasiment pas en semaine ou le week-end.
 
@@ -477,20 +474,20 @@ title: Conclusion
 
 # Conclusion
 
+Bravo, vous avez fini le workshop !
+
 En résumé, depuis notre application .Net 5 et son Dockerfile nous avons :
 
 - Déployer notre image dans un Azure Container Registry
 - Déployer notre application vers notre cluster Kubernetes grâce à un fichier yaml.
 - Configurer l'autoscaling sur notre cluster
 
-Bravo, vous avez fini le workshop!
-
 ## Pour aller plus loin
 
-Si il y a une seule raison à retenir pour l'utilisation d'un cluster Kubernetes c'est bien pour garantir de la haute disponibilité. En théorie ça peut paraître simple mais en pratique ... Voyons ensemble les différentes stratégies pour garantir de la haute disponibilité au niveau de son infra et de ces applications dans AKS.
-Lien dev.to
-https://dev.to/thomasrannou/de-la-haute-disponibilite-avec-azure-kubernetes-services-le-focus-infra-2jdc
-https://dev.to/thomasrannou/de-la-haute-disponibilite-avec-azure-kubernetes-services-le-focus-apps-3l8l
+Si il y a une seule raison à retenir pour l'utilisation d'un cluster Kubernetes c'est bien pour garantir de la haute disponibilité.
+Je vous propose donc ces deux liens pour gérer cette disponibilité :
+- [au niveau de votre infrastructure](https://dev.to/thomasrannou/de-la-haute-disponibilite-avec-azure-kubernetes-services-le-focus-infra-2jdc)
+- [et de vos applications](https://dev.to/thomasrannou/de-la-haute-disponibilite-avec-azure-kubernetes-services-le-focus-apps-3l8l) 
 
 ## Crédit
 
