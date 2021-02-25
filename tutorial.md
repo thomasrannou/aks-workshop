@@ -26,7 +26,7 @@ title: Objectif du workshop
 
 # Objectif du workshop
 
-Ce workshop, accessible à **tous les développeurs même sans connaissance de Kubernetes ou d'Azure **, vous permettra de découvrir le déploiement de cluster Kubernetes dans Azure ainsi que le déploiement d'application conteneurisée dans cet environnement.
+Ce workshop, accessible à **tous les développeurs même sans connaissance de Kubernetes ou d'Azure**, vous permettra de découvrir le déploiement de cluster Kubernetes dans Azure ainsi que le déploiement d'application conteneurisée dans cet environnement.
 
 ![Logo du projet Kubernetes](media/kubernetes-logo.png)
 
