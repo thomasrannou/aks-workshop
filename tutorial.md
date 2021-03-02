@@ -43,7 +43,8 @@ Afin de pouvoir provisionner votre cluster et y déployer l'application vous aur
 - [Visual Studio Code](https://code.visualstudio.com/?wt.mc_id=WTMCID)
 - [Docker](https://www.docker.com/products/docker-desktop)
 - [Azure CLI](https://docs.microsoft.com/fr-fr/cli/azure/install-azure-cli)
-- [Powershell 7](https://github.com/PowerShell/PowerShell/releases/tag/v7.1.2)
+- En environnement Windows : [Powershell 7](https://github.com/PowerShell/PowerShell/releases/tag/v7.1.2)
+- En environnement Linux : Bash
 --sep--
 ---
 title: Préparez votre environnement Azure
@@ -366,7 +367,8 @@ Pour demander la création d'un HPA sur mon deployment executez :
 _kubectl autoscale deployment deployment-appworkshop --max 100 --min 5 --cpu-percent 70_
 
 Si je vérifie grace à cette commande : 
-_kubectl describe pod | select-string -pattern '^Name:','^Node:'_
+**Powershell** : _kubectl describe pod | select-string -pattern '^Name:','^Node:'_
+**Bash** : kubectl describe pod | grep "^Name:\|^Node:"
 
 ![Déploiement d'un HPA](media/22-deployhpa.PNG)
 
@@ -395,7 +397,8 @@ _az aks update --resource-group rg-workshop --name aks-workshopdevcongalaxy --en
 
 On a maintenant un cluster avec un nodepool scalable entre 2 et 5 :
 
-_kubectl describe nodes | select-string -pattern '^Name:','zone='_
+** Powershell** : _kubectl describe nodes | select-string -pattern '^Name:','zone='_
+**Bash** : _kubectl describe nodes | grep "^Name:\|zone="_
 
 ![Description des nodes](media/25-aksnodes.PNG)
 
@@ -466,6 +469,18 @@ On se rend ici compte de toute la puissance de Kubernetes dans cette getion de l
 Ce genre de solutions est donc parfaitement adapté au service avec un trafic réseau variable tel que :
 - Un site e-commerce particulierement fréquenté en période de solde ou de fêtes de fin d'année.
 - Une application de saisie des temps de travail très sollicité à la fin de la semaine ou du mois et quasiment pas en semaine ou le week-end.
+
+--sep--
+---
+title: Un peu de ménage !
+---
+
+# Un peu de ménage
+
+Pour éviter les mauvaises surprises au niveau de la tarification, n'oubliez pas de supprimer vos ressources. 
+Pour cela vous pouvez supprimer le groupe de ressource rg-workshop directement sur le portail Azure ou bien grace à cette commande :
+
+_az group delete --name rg-workshop_
 
 --sep--
 ---
