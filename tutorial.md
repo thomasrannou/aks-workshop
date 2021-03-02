@@ -367,7 +367,9 @@ Pour demander la création d'un HPA sur mon deployment executez :
 _kubectl autoscale deployment deployment-appworkshop --max 100 --min 5 --cpu-percent 70_
 
 Si je vérifie grace à cette commande : 
+
 **Powershell** : _kubectl describe pod | select-string -pattern '^Name:','^Node:'_
+
 **Bash** : kubectl describe pod | grep "^Name:\|^Node:"
 
 ![Déploiement d'un HPA](media/22-deployhpa.PNG)
@@ -397,7 +399,8 @@ _az aks update --resource-group rg-workshop --name aks-workshopdevcongalaxy --en
 
 On a maintenant un cluster avec un nodepool scalable entre 2 et 5 :
 
-** Powershell** : _kubectl describe nodes | select-string -pattern '^Name:','zone='_
+**Powershell** : _kubectl describe nodes | select-string -pattern '^Name:','zone='_
+
 **Bash** : _kubectl describe nodes | grep "^Name:\|zone="_
 
 ![Description des nodes](media/25-aksnodes.PNG)
