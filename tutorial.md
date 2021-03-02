@@ -509,4 +509,4 @@ Je vous propose donc ces deux liens pour gérer cette disponibilité :
 
 ## Crédit
 
-Ce workshop a été créé par [Thomas Rannou](https://twitter.com/thomas_rannou) puis relu et réarrangé par [Olivier Leplus](https://twitter.com/olivierleplus). 
+Ce workshop a été créé par [Thomas Rannou](https://twitter.com/thomas_rannou) puis relu par [Olivier Leplus](https://twitter.com/olivierleplus) et [Yohan Lasorsa](https://twitter.com/sinedied). 
