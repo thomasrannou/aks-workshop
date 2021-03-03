@@ -9,7 +9,7 @@ title: Introduction
 
 # Introduction
 
-Ce repository contient le code ainsi que les instructions vous permettant de 
+Ce [repository](https://github.com/thomasrannou/aks-workshop) contient le code ainsi que les instructions vous permettant de 
 réaliser le workshop **déployer votre premier cluster kubernetes dans Azure**.
 
 ## Pré-requis
