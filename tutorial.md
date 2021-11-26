@@ -374,7 +374,7 @@ Si je vérifie grace à cette commande :
 
 ![Déploiement d'un HPA](media/22-deployhpa.PNG)
 
-Je constate qu’après la mise en place de mon HPA, j’ai désormais 5 pods d’opérationnel déployés sur les deux nodes à notre disposition. Les appels vers mon site web seront automatiquement répartis vers ces deux pods via le loadbalancer de mon service.
+Je constate qu’après la mise en place de mon HPA, j’ai désormais 5 pods d’opérationnel déployés sur les deux nodes à notre disposition. Les appels vers mon site web seront automatiquement répartis vers ces cinq pods via le loadbalancer de mon service.
 
 Précision : La commande kubectl get hpa me permet d’afficher mes differents scaling mis en place sur mon cluster k8s.
 
