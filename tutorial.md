@@ -176,7 +176,7 @@ Ce [registry](https://azure.microsoft.com/fr-fr/services/container-registry) vou
 
 Vous pouvez demander la création de votre Container Registry grâce à cette commande :
 
-_az acr create --resource-group rg-workshop --name acr-workshopdevcongalaxy --sku Basic_
+_az acr create --resource-group rg-workshop --name acrworkshopdevcongalaxy --sku Basic_
 
 ![Creation du container registry](media/5-registrycreate.PNG)
 
@@ -370,7 +370,7 @@ Si je vérifie grace à cette commande :
 
 **Powershell** : _kubectl describe pod | select-string -pattern '^Name:','^Node:'_
 
-**Bash** : kubectl describe pod | grep "^Name:\|^Node:"
+**Bash** : kubectl describe pod | egrep "^Name:\|^Node:"
 
 ![Déploiement d'un HPA](media/22-deployhpa.PNG)
 
@@ -401,7 +401,7 @@ On a maintenant un cluster avec un nodepool scalable entre 2 et 5 :
 
 **Powershell** : _kubectl describe nodes | select-string -pattern '^Name:','zone='_
 
-**Bash** : _kubectl describe nodes | grep "^Name:\|zone="_
+**Bash** : _kubectl describe nodes | egrep "^Name:\|zone="_
 
 ![Description des nodes](media/25-aksnodes.PNG)
 
