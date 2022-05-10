@@ -43,7 +43,7 @@ Afin de pouvoir provisionner votre cluster et y déployer l'application vous aur
 - [Visual Studio Code](https://code.visualstudio.com/?wt.mc_id=WTMCID)
 - [Docker](https://www.docker.com/products/docker-desktop)
 - [Azure CLI](https://docs.microsoft.com/fr-fr/cli/azure/install-azure-cli)
-- En environnement Windows : [Powershell 7](https://github.com/PowerShell/PowerShell/releases/tag/v7.1.2)
+- En environnement Windows : [Powershell 7](https://github.com/PowerShell/PowerShell/releases/tag/v7.1.2). Compatible à partir de la V5.
 - En environnement Linux : Bash
 --sep--
 ---
@@ -442,6 +442,8 @@ Puis télécharger le fichier RDP via le bouton "Connecter" :
 ![Téléchargement du fichier RDP](media/26-vm5.PNG)
 
 ![Téléchargement du fichier RDP](media/26-vm6.PNG)
+
+Ouvrez ce fameux fichier RDP et saisissez vos informations de connexion (si vous êtes rattaché à un domaine d'entreprise saisissez votre nom d'utilisateur précédé d'un \ ).
 
 Pour déclencher le test, utilisez cette commande. Il faut renseigner la bonne url, la durée, et le nombre d'appels par seconde (ici 5000)
 
