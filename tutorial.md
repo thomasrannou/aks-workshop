@@ -242,7 +242,7 @@ J’obtiens alors un JSON descriptif de l’autorisation accordée :
 
 NB : je vous propose dans ce workshop cette façon de faire pour montrer que l'intégration entre ces deux composants est soumise à des droits. Un service Azure n'est pas libre d'utiliser comme bon lui semble un autre service ! 
 
-A noter tout de même que la gestion de ce service principal et l'autorisation acr-pull peux se faire de façon implicite à la création du cluster AKS gràce au paramètre --attach-acr $registryId.
+A noter tout de même que la gestion de ce service principal et l'autorisation acr-pull peux se faire de façon implicite à la création du cluster AKS grâce au paramètre --attach-acr $registryId.
 
 ## Création du cluster Azure Kubernetes Services
 
@@ -265,7 +265,7 @@ Cette notion de zone de disponibilité est fondamentale lorsqu'on s'intéresse �
 
 ![Déploiement du cluster AKS](media/14-deployaksned.PNG)
 
-Nous avons donc provisionner un cluster Azure Kubernetes Service ! Voyons maintenant comment l'administrer en local.
+Nous avons donc provisionné un cluster Azure Kubernetes Service ! Voyons maintenant comment l'administrer en local.
 Pour gérer un cluster Kubernetes, on utilise *kubectl*, le client de ligne de commande Kubernetes . Pour installer kubectl, si il n'est pas déja présent, utilisez :
 
 _az aks install-cli_
